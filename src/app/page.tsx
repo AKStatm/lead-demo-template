@@ -11,9 +11,22 @@ type Props = {
   searchParams?: Promise<{ niche?: string }>;
 };
 
+/** Client demos: hide niche switcher. Local/dev can show with NEXT_PUBLIC_SHOW_NICHE_PREVIEW=true */
+function showNichePreview() {
+  if (process.env.NEXT_PUBLIC_SHOW_NICHE_PREVIEW === "true") return true;
+  if (process.env.NEXT_PUBLIC_SHOW_NICHE_PREVIEW === "false") return false;
+  return process.env.NODE_ENV !== "production";
+}
+
 export default async function Home({ searchParams }: Props) {
   const params = (await searchParams) || {};
   const base = getSiteModel();
+  const preview = showNichePreview();
+
+  // Production client sites: ONLY lead.json niche — ignore ?niche=
+  if (!preview) {
+    return <SiteShell site={base} />;
+  }
 
   const nicheId = (params.niche as NicheId) || base.lead.nicheId;
   const nicheExists = Boolean(NICHES[nicheId]);

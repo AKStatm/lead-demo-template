@@ -7,7 +7,7 @@ export function Footer({ site }: { site: SiteModel }) {
       <div className="container-pad grid gap-8 py-10 md:grid-cols-[1.2fr_0.8fr]">
         <div>
           <div className="text-xs font-semibold uppercase tracking-[0.16em] text-white/60">
-            {site.niche.label} demo website
+            {site.niche.label} · {site.lead.cityArea}
           </div>
           <div className="font-display mt-2 text-2xl font-bold">{site.lead.businessName}</div>
           <p className="mt-3 max-w-lg text-sm text-white/70">{site.niche.tagline}</p>
@@ -25,7 +25,7 @@ export function Footer({ site }: { site: SiteModel }) {
         </div>
       </div>
       <div className="border-t border-white/10 py-4 text-center text-xs text-white/50">
-        Demo site for lead #{site.lead.leadId} · Built for outreach · Not the final client brand unless customized
+        © {new Date().getFullYear()} {site.lead.businessName}. All rights reserved.
       </div>
     </footer>
   );

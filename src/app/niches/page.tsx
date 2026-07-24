@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { notFound } from "next/navigation";
 import { listNiches } from "@/config/niches";
 import { FAMILY_THEMES } from "@/config/families";
 
@@ -6,7 +7,16 @@ export const metadata = {
   title: "All niche templates",
 };
 
+function showNichePreview() {
+  if (process.env.NEXT_PUBLIC_SHOW_NICHE_PREVIEW === "true") return true;
+  if (process.env.NEXT_PUBLIC_SHOW_NICHE_PREVIEW === "false") return false;
+  return process.env.NODE_ENV !== "production";
+}
+
 export default function NichesPage() {
+  // Hide niche catalog on client production demos
+  if (!showNichePreview()) notFound();
+
   const niches = listNiches();
   const byFamily = niches.reduce<Record<string, typeof niches>>((acc, niche) => {
     acc[niche.family] = acc[niche.family] || [];
