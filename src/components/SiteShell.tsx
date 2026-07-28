@@ -5,7 +5,15 @@ import { TrustBar } from "./TrustBar";
 import { EmergencyBand } from "./EmergencyBand";
 import { Services } from "./Services";
 import { Features } from "./Features";
-import { MenuHighlights, ClassesBand } from "./SpecialSections";
+import {
+  MenuHighlights,
+  ClassesBand,
+  BeforeAfter,
+  Portfolio,
+  Consultation,
+  Delivery,
+  Warranty,
+} from "./SpecialSections";
 import { Gallery } from "./Gallery";
 import { Packages } from "./Packages";
 import { Reviews } from "./Reviews";
@@ -43,6 +51,19 @@ export function SiteShell({ site }: { site: SiteModel }) {
   );
 }
 
+/** Niche-specific extras gated by specialSections flags */
+function NicheSpecials({ site }: { site: SiteModel }) {
+  return (
+    <>
+      <BeforeAfter site={site} />
+      <Portfolio site={site} />
+      <Consultation site={site} />
+      <Delivery site={site} />
+      <Warranty site={site} />
+    </>
+  );
+}
+
 /** Different section order + emphasis per niche family */
 function renderFamilySections(site: SiteModel): ReactNode {
   const family: NicheFamily = site.niche.family;
@@ -60,8 +81,10 @@ function renderFamilySections(site: SiteModel): ReactNode {
     return (
       <>
         <MenuHighlights site={site} />
+        <Delivery site={site} />
         <Packages site={site} />
         <Gallery site={site} />
+        <Consultation site={site} />
         <Features site={site} />
         <TrustBar site={site} />
         {commonEnd}
@@ -73,8 +96,11 @@ function renderFamilySections(site: SiteModel): ReactNode {
     return (
       <>
         <Services site={site} />
+        <BeforeAfter site={site} />
+        <Portfolio site={site} />
         <Gallery site={site} />
         <Packages site={site} />
+        <Consultation site={site} />
         <Features site={site} />
         <TrustBar site={site} />
         {commonEnd}
@@ -87,6 +113,9 @@ function renderFamilySections(site: SiteModel): ReactNode {
       <>
         <TrustBar site={site} />
         <Services site={site} />
+        <Consultation site={site} />
+        <ClassesBand site={site} />
+        <Delivery site={site} />
         <Features site={site} />
         <Packages site={site} />
         <Gallery site={site} />
@@ -100,6 +129,8 @@ function renderFamilySections(site: SiteModel): ReactNode {
       <>
         <EmergencyBand site={site} />
         <Services site={site} />
+        <BeforeAfter site={site} />
+        <Warranty site={site} />
         <Packages site={site} />
         <Gallery site={site} />
         <Features site={site} />
@@ -115,6 +146,7 @@ function renderFamilySections(site: SiteModel): ReactNode {
         <ClassesBand site={site} />
         <Packages site={site} />
         <Services site={site} />
+        <Consultation site={site} />
         <Features site={site} />
         <Gallery site={site} />
         {commonEnd}
@@ -126,8 +158,10 @@ function renderFamilySections(site: SiteModel): ReactNode {
     return (
       <>
         <TrustBar site={site} />
+        <Consultation site={site} />
         <Features site={site} />
         <Services site={site} />
+        <Portfolio site={site} />
         <Packages site={site} />
         <Gallery site={site} />
         {commonEnd}
@@ -139,8 +173,12 @@ function renderFamilySections(site: SiteModel): ReactNode {
     return (
       <>
         <Services site={site} />
+        <Portfolio site={site} />
+        <Delivery site={site} />
         <Packages site={site} />
+        <Warranty site={site} />
         <Gallery site={site} />
+        <Consultation site={site} />
         <Features site={site} />
         <TrustBar site={site} />
         {commonEnd}
@@ -154,10 +192,17 @@ function renderFamilySections(site: SiteModel): ReactNode {
       <TrustBar site={site} />
       <EmergencyBand site={site} />
       <Services site={site} />
+      <BeforeAfter site={site} />
+      <Warranty site={site} />
       <Features site={site} />
+      <Portfolio site={site} />
+      <Consultation site={site} />
       <Gallery site={site} />
       <Packages site={site} />
       {commonEnd}
     </>
   );
 }
+
+// keep export available for niche previews if needed
+export { NicheSpecials };

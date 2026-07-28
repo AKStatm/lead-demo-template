@@ -78,17 +78,16 @@ if (!nicheId) {
   }
 }
 
-const slug = businessName
+// Short public URLs: https://demo-pl-001.vercel.app
+// (do NOT append long business-name slug)
+const shortId = leadId
   .toLowerCase()
   .replace(/[^a-z0-9]+/g, '-')
-  .replace(/^-|-$/g, '')
-  .slice(0, 28);
+  .replace(/^-|-$/g, '');
 
-const repoName = ('demo-' + leadId + '-' + slug)
-  .toLowerCase()
-  .replace(/[^a-z0-9-]/g, '-')
+const repoName = ('demo-' + shortId)
   .replace(/--+/g, '-')
-  .slice(0, 60);
+  .slice(0, 40);
 
 const leadJson = {
   leadId,
@@ -130,7 +129,8 @@ return [{
     cityArea,
     repoName,
     repoUrl: 'https://github.com/AKStatm/' + repoName,
-    vercelProjectName: repoName.slice(0, 48),
+    vercelProjectName: repoName, // same short name → short .vercel.app URL
+    demoUrl: 'https://' + repoName + '.vercel.app',
     leadJsonBase64,
     status: 'Building'
   }

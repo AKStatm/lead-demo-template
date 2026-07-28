@@ -1,7 +1,7 @@
 import { SiteShell } from "@/components/SiteShell";
 import { getSiteModel } from "@/config/site";
 import { getNiche, NICHES } from "@/config/niches";
-import { FAMILY_THEMES } from "@/config/families";
+import { getNicheTheme } from "@/config/niche-themes";
 import { getNicheImages } from "@/config/images";
 import { ensureFullPackages } from "@/config/packages";
 import type { NicheId } from "@/config/types";
@@ -41,7 +41,7 @@ export default async function Home({ searchParams }: Props) {
   }
 
   const nicheDef = getNiche(nicheId);
-  const theme = FAMILY_THEMES[nicheDef.family];
+  const theme = getNicheTheme(nicheId, nicheDef.family);
   const images = getNicheImages(nicheId, nicheDef.family);
 
   const site = {

@@ -1,6 +1,6 @@
 import leadJson from "./lead.json";
 import { getNiche } from "./niches";
-import { FAMILY_THEMES } from "./families";
+import { getNicheTheme } from "./niche-themes";
 import { getNicheImages } from "./images";
 import { ensureFullPackages } from "./packages";
 import type { LeadData, NicheDefinition, NicheTheme } from "./types";
@@ -9,7 +9,7 @@ export const lead = leadJson as LeadData;
 
 export function getSiteModel() {
   const nicheBase: NicheDefinition = getNiche(lead.nicheId);
-  const theme: NicheTheme = FAMILY_THEMES[nicheBase.family];
+  const theme: NicheTheme = getNicheTheme(lead.nicheId, nicheBase.family);
   const images = getNicheImages(lead.nicheId, nicheBase.family);
 
   const services =
