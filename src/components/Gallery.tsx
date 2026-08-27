@@ -1,6 +1,6 @@
-import Image from "next/image";
 import type { SiteModel } from "@/config/site";
 import { imageAt } from "@/config/images";
+import { SafeImage } from "./SafeImage";
 
 export function Gallery({ site }: { site: SiteModel }) {
   const labels = site.niche.galleryLabels;
@@ -24,13 +24,13 @@ export function Gallery({ site }: { site: SiteModel }) {
           {labels.map((label, index) => (
             <div
               key={`${label}-${index}`}
-              className={`relative overflow-hidden rounded-[22px] ${
+              className={`relative overflow-hidden rounded-[22px] bg-[var(--soft)] ${
                 index === 0
                   ? "col-span-2 row-span-2 min-h-[220px] md:min-h-[340px]"
                   : "min-h-[140px] md:min-h-[160px]"
               }`}
             >
-              <Image
+              <SafeImage
                 src={imageAt(site.images, index)}
                 alt={label}
                 fill

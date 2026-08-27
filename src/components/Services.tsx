@@ -1,10 +1,10 @@
 "use client";
 
-import Image from "next/image";
 import { Tag } from "antd";
 import { FiArrowUpRight } from "react-icons/fi";
 import type { SiteModel } from "@/config/site";
 import { imageAt } from "@/config/images";
+import { SafeImage } from "./SafeImage";
 
 export function Services({ site }: { site: SiteModel }) {
   return (
@@ -31,8 +31,8 @@ export function Services({ site }: { site: SiteModel }) {
               key={service.title}
               className="card-surface group flex h-full flex-col overflow-hidden transition hover:-translate-y-1 hover:shadow-[var(--shadow)]"
             >
-              <div className="relative h-40 w-full">
-                <Image
+              <div className="relative h-40 w-full bg-[var(--soft)]">
+                <SafeImage
                   src={imageAt(site.images, index + 1)}
                   alt={service.title}
                   fill

@@ -15,6 +15,7 @@ import {
 } from "react-icons/fi";
 import type { SiteModel } from "@/config/site";
 import type { NicheFamily } from "@/config/types";
+import { SafeImage } from "./SafeImage";
 
 const familyIcon: Record<NicheFamily, typeof FiTool> = {
   "home-services": FiTool,
@@ -72,8 +73,8 @@ function DarkCtas({ site }: { site: SiteModel }) {
 function BookingCard({ site }: { site: SiteModel }) {
   return (
     <div className="relative overflow-hidden rounded-[24px] border border-black/5 bg-white text-slate-900 shadow-2xl">
-      <div className="relative h-40 w-full sm:h-44">
-        <Image
+      <div className="relative h-40 w-full bg-slate-100 sm:h-44">
+        <SafeImage
           src={site.images[1] || site.images[0]}
           alt={`${site.niche.label} preview`}
           fill
