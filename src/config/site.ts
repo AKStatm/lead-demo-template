@@ -3,53 +3,140 @@ import { getNiche } from "./niches";
 import { getNicheTheme } from "./niche-themes";
 import { getNicheImages } from "./images";
 import { ensureFullPackages } from "./packages";
+import { ensureFullFaqs } from "./faqs";
+import { getNicheLayout, type LayoutMeta } from "./layouts";
 import type { LeadData, NicheDefinition, NicheTheme } from "./types";
 
-export const lead = leadJson as LeadData;
+export const lead = normalizeLead(leadJson as LeadData);
+
+function blank(v?: string | null) {
+  return (v || "").trim();
+}
+
+function deriveCity(address: string) {
+  const parts = address
+    .split(",")
+    .map((p) => p.trim())
+    .filter(Boolean);
+  if (parts.length >= 2) return parts.slice(-2).join(", ");
+  return address || "Your city";
+}
+
+/** Scraped Maps data is incomplete: only name + address are required. */
+function normalizeLead(raw: LeadData): LeadData {
+  const businessName = blank(raw.businessName) || "Local Business";
+  const address = blank(raw.address);
+  const cityArea = blank(raw.cityArea) || deriveCity(address);
+  return {
+    ...raw,
+    leadId: blank(raw.leadId) || "DEMO",
+    businessName,
+    address: address || cityArea,
+    cityArea: cityArea || address || "Lahore",
+    phone: blank(raw.phone),
+    whatsapp: blank(raw.whatsapp),
+    email: blank(raw.email),
+    googleMapsLink: blank(raw.googleMapsLink),
+    website: blank(raw.website),
+    ownerName: blank(raw.ownerName),
+    workingHours: blank(raw.workingHours),
+    taglineOverride: blank(raw.taglineOverride),
+    about: blank(raw.about),
+    rating: typeof raw.rating === "number" && raw.rating > 0 ? raw.rating : undefined,
+    reviewCount: typeof raw.reviewCount === "number" && raw.reviewCount > 0 ? raw.reviewCount : undefined,
+  };
+}
 
 export function getSiteModel() {
-  const nicheBase: NicheDefinition = getNiche(lead.nicheId);
-  const theme: NicheTheme = getNicheTheme(lead.nicheId, nicheBase.family);
-  const images = getNicheImages(lead.nicheId, nicheBase.family);
+  return buildSiteModel(lead);
+}
+
+export function buildSiteModel(input: LeadData, preview = false) {
+  const leadData = normalizeLead(input);
+  const nicheBase: NicheDefinition = getNiche(leadData.nicheId);
+  const theme: NicheTheme = getNicheTheme(leadData.nicheId, nicheBase.family);
+  const images = getNicheImages(leadData.nicheId, nicheBase.family);
+  const layout: LayoutMeta = getNicheLayout(leadData.nicheId, nicheBase.family);
 
   const services =
-    lead.topServices && lead.topServices.length > 0
+    leadData.topServices && leadData.topServices.length > 0
       ? nicheBase.services.map((s, i) =>
-          lead.topServices![i] ? { ...s, title: lead.topServices![i] } : s
+          leadData.topServices![i] ? { ...s, title: leadData.topServices![i] } : s
         )
       : nicheBase.services;
 
+  const city = leadData.cityArea;
   const niche: NicheDefinition = {
     ...nicheBase,
     services,
-    tagline: lead.taglineOverride || nicheBase.tagline,
-    packages: ensureFullPackages(nicheBase, lead.businessName),
+    tagline: leadData.taglineOverride || nicheBase.tagline,
+    packages: ensureFullPackages(nicheBase, leadData.businessName),
+    faqs: ensureFullFaqs(nicheBase, leadData.businessName, city),
+    galleryLabels: padGallery(nicheBase.galleryLabels, nicheBase.label),
   };
 
+  const phone = leadData.phone || leadData.whatsapp || "";
+  const hasPhone = Boolean(phone);
+  const hasWhatsApp = Boolean(leadData.whatsapp || leadData.phone);
+  const hasEmail = Boolean(leadData.email);
+  const hasRating = typeof leadData.rating === "number" && leadData.rating > 0;
+  const reviewCount = leadData.reviewCount || 0;
+
   return {
-    lead,
+    lead: leadData,
     niche,
     theme,
     images,
+    layout,
+    preview,
     display: {
-      phoneDisplay: formatPkPhone(lead.phone || lead.whatsapp),
-      whatsappLink: buildWhatsAppLink(lead.whatsapp || lead.phone, niche.whatsappPreset),
+      phoneDisplay: hasPhone ? formatPkPhone(phone) : "",
+      whatsappLink: hasWhatsApp
+        ? buildWhatsAppLink(leadData.whatsapp || leadData.phone || "", niche.whatsappPreset)
+        : "",
       mapsLink:
-        lead.googleMapsLink ||
+        leadData.googleMapsLink ||
         `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(
-          `${lead.businessName} ${lead.address}`
+          `${leadData.businessName} ${leadData.address}`
         )}`,
-      rating: lead.rating ?? 4.8,
-      reviewCount: lead.reviewCount ?? 50,
-      hours: lead.workingHours || "Open today · Reply on WhatsApp fast",
+      mapsEmbed: `https://maps.google.com/maps?q=${encodeURIComponent(
+        `${leadData.businessName} ${leadData.address || city}`
+      )}&z=15&output=embed`,
+      rating: hasRating ? leadData.rating! : 0,
+      reviewCount,
+      hours: leadData.workingHours || "Message us to confirm today's hours",
       about:
-        lead.about ||
-        `${lead.businessName} provides trusted ${niche.label.toLowerCase()} services in ${lead.cityArea}. Book on WhatsApp for a fast response.`,
+        leadData.about ||
+        `${leadData.businessName} is a local ${niche.label.toLowerCase()} in ${city}. Name and address are live — book or visit using the details below.`,
+      hasPhone,
+      hasWhatsApp,
+      hasEmail,
+      hasRating,
+      hasReviews: reviewCount > 0,
+      hasHours: Boolean(leadData.workingHours),
     },
   };
 }
 
-export type SiteModel = ReturnType<typeof getSiteModel>;
+export type SiteModel = ReturnType<typeof buildSiteModel>;
+
+function padGallery(labels: string[], label: string) {
+  const extras = [
+    `${label} interior`,
+    "Team at work",
+    "Customer space",
+    "Detail finish",
+    "Ready for you",
+    "Local service",
+  ];
+  const out = [...labels];
+  let i = 0;
+  while (out.length < 8) {
+    out.push(extras[i % extras.length]);
+    i += 1;
+  }
+  return out.slice(0, 8);
+}
 
 function formatPkPhone(raw: string) {
   const digits = raw.replace(/\D/g, "");
@@ -63,6 +150,7 @@ function formatPkPhone(raw: string) {
 
 function buildWhatsAppLink(raw: string, preset: string) {
   let digits = raw.replace(/\D/g, "");
+  if (!digits) return "";
   if (digits.startsWith("0")) digits = `92${digits.slice(1)}`;
   if (digits.length === 10) digits = `92${digits}`;
   return `https://wa.me/${digits}?text=${encodeURIComponent(preset)}`;

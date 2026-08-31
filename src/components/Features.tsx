@@ -13,8 +13,8 @@ export function Features({ site }: { site: SiteModel }) {
             Built for real {site.niche.label.toLowerCase()} needs in Pakistan
           </h2>
           <p className="mt-3 text-[var(--muted)]">
-            This demo site is personalized for <strong>{site.lead.businessName}</strong> — ready to
-            show clients a live booking experience.
+            Built for <strong>{site.lead.businessName}</strong> in {site.lead.cityArea} — easy
+            booking, clear services, and a site that looks ready to send to customers.
           </p>
           {site.lead.yearsExperience ? (
             <div className="mt-6 inline-flex items-center gap-3 rounded-2xl bg-[var(--soft)] px-4 py-3">

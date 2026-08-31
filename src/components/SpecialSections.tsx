@@ -1,6 +1,6 @@
 "use client";
 
-import Image from "next/image";
+import { SafeImage } from "./SafeImage";
 import {
   FiCheckCircle,
   FiClipboard,
@@ -11,8 +11,9 @@ import {
 import type { SiteModel } from "@/config/site";
 import { imageAt } from "@/config/images";
 
-export function MenuHighlights({ site }: { site: SiteModel }) {
+export function MenuHighlights({ site, force = false }: { site: SiteModel; force?: boolean }) {
   const show =
+    force ||
     site.niche.specialSections.includes("menu") ||
     site.niche.specialSections.includes("menu-cards");
   if (!show) return null;
@@ -30,7 +31,7 @@ export function MenuHighlights({ site }: { site: SiteModel }) {
           {site.niche.services.map((item, index) => (
             <div key={item.title} className="card-surface overflow-hidden">
               <div className="relative h-36 w-full">
-                <Image
+                <SafeImage
                   src={imageAt(site.images, index)}
                   alt={item.title}
                   fill
@@ -58,7 +59,7 @@ export function ClassesBand({ site }: { site: SiteModel }) {
     <section className="container-pad pb-2 pt-6">
       <div className="card-surface relative overflow-hidden">
         <div className="absolute inset-0 opacity-20">
-          <Image src={imageAt(site.images, 2)} alt="" fill className="object-cover" sizes="100vw" />
+          <SafeImage src={imageAt(site.images, 2)} alt="" fill className="object-cover" sizes="100vw" />
         </div>
         <div className="relative grid gap-4 p-6 md:grid-cols-[1fr_auto] md:items-center">
           <div>
@@ -104,7 +105,7 @@ export function BeforeAfter({ site }: { site: SiteModel }) {
             <div key={pair.label} className="card-surface overflow-hidden">
               <div className="grid grid-cols-2">
                 <div className="relative min-h-[160px] sm:min-h-[200px]">
-                  <Image
+                  <SafeImage
                     src={imageAt(site.images, pair.before)}
                     alt={`${pair.label} before`}
                     fill
@@ -116,7 +117,7 @@ export function BeforeAfter({ site }: { site: SiteModel }) {
                   </span>
                 </div>
                 <div className="relative min-h-[160px] sm:min-h-[200px]">
-                  <Image
+                  <SafeImage
                     src={imageAt(site.images, pair.after)}
                     alt={`${pair.label} after`}
                     fill
@@ -172,7 +173,7 @@ export function Portfolio({ site }: { site: SiteModel }) {
               key={`${label}-${index}`}
               className="group relative min-h-[140px] overflow-hidden rounded-[20px] sm:min-h-[180px]"
             >
-              <Image
+              <SafeImage
                 src={imageAt(site.images, index)}
                 alt={label}
                 fill
@@ -261,7 +262,7 @@ export function Delivery({ site }: { site: SiteModel }) {
           </a>
         </div>
         <div className="relative min-h-[160px] overflow-hidden rounded-[18px] sm:min-h-[200px]">
-          <Image
+          <SafeImage
             src={imageAt(site.images, 1)}
             alt="Delivery"
             fill

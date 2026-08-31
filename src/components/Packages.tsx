@@ -1,6 +1,6 @@
 "use client";
 
-import Image from "next/image";
+import { SafeImage } from "./SafeImage";
 import { FiCheck } from "react-icons/fi";
 import type { SiteModel } from "@/config/site";
 import { imageAt } from "@/config/images";
@@ -32,7 +32,7 @@ export function Packages({ site }: { site: SiteModel }) {
               }`}
             >
               <div className="relative h-28 w-full">
-                <Image
+                <SafeImage
                   src={imageAt(site.images, index + 2)}
                   alt={pkg.name}
                   fill

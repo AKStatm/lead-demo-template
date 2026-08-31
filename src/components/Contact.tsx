@@ -1,6 +1,7 @@
 import { FiMail, FiMapPin, FiNavigation, FiPhone } from "react-icons/fi";
 import { FaWhatsapp } from "react-icons/fa";
 import type { SiteModel } from "@/config/site";
+import { MapEmbed } from "./MapEmbed";
 
 export function Contact({ site }: { site: SiteModel }) {
   return (
@@ -10,23 +11,27 @@ export function Contact({ site }: { site: SiteModel }) {
           <div className="text-xs font-semibold uppercase tracking-[0.16em] text-[var(--primary)]">Contact</div>
           <h2 className="font-display mt-2 text-3xl font-bold">Visit or message us</h2>
           <div className="mt-6 space-y-4">
-            <div className="flex gap-3">
-              <FiMapPin className="mt-1 text-[var(--primary)]" />
-              <div>
-                <div className="font-semibold">Address</div>
-                <div className="text-sm text-[var(--muted)]">{site.lead.address}</div>
+            {site.lead.address ? (
+              <div className="flex gap-3">
+                <FiMapPin className="mt-1 text-[var(--primary)]" />
+                <div>
+                  <div className="font-semibold">Address</div>
+                  <div className="text-sm text-[var(--muted)]">{site.lead.address}</div>
+                </div>
               </div>
-            </div>
-            <div className="flex gap-3">
-              <FiPhone className="mt-1 text-[var(--primary)]" />
-              <div>
-                <div className="font-semibold">Phone</div>
-                <a className="text-sm text-[var(--primary)]" href={`tel:${site.lead.phone || site.lead.whatsapp}`}>
-                  {site.display.phoneDisplay}
-                </a>
+            ) : null}
+            {site.display.hasPhone ? (
+              <div className="flex gap-3">
+                <FiPhone className="mt-1 text-[var(--primary)]" />
+                <div>
+                  <div className="font-semibold">Phone</div>
+                  <a className="text-sm text-[var(--primary)]" href={`tel:${site.lead.phone || site.lead.whatsapp}`}>
+                    {site.display.phoneDisplay}
+                  </a>
+                </div>
               </div>
-            </div>
-            {site.lead.email ? (
+            ) : null}
+            {site.display.hasEmail ? (
               <div className="flex gap-3">
                 <FiMail className="mt-1 text-[var(--primary)]" />
                 <div>
@@ -37,41 +42,29 @@ export function Contact({ site }: { site: SiteModel }) {
                 </div>
               </div>
             ) : null}
+            <div className="rounded-2xl bg-[var(--soft)] p-4 text-sm">
+              <div className="font-semibold">Hours</div>
+              <div className="mt-1 text-[var(--muted)]">{site.display.hours}</div>
+              {site.lead.ownerName ? (
+                <div className="mt-2 text-[var(--muted)]">Owner: {site.lead.ownerName}</div>
+              ) : null}
+              {site.lead.urduSupport ? (
+                <div className="mt-2 text-[var(--muted)]">Urdu & English on WhatsApp.</div>
+              ) : null}
+            </div>
             <div className="flex flex-wrap gap-3 pt-2">
-              <a href={site.display.whatsappLink} className="btn-primary">
-                <FaWhatsapp /> WhatsApp
-              </a>
+              {site.display.hasWhatsApp ? (
+                <a href={site.display.whatsappLink} className="btn-primary">
+                  <FaWhatsapp /> WhatsApp
+                </a>
+              ) : null}
               <a href={site.display.mapsLink} target="_blank" rel="noreferrer" className="btn-secondary">
                 <FiNavigation /> Open in Maps
               </a>
             </div>
           </div>
         </div>
-
-        <div
-          className="card-surface relative min-h-[280px] overflow-hidden p-6 text-white"
-          style={{ background: "var(--gradient)" }}
-        >
-          <div className="absolute inset-0 bg-black/25" />
-          <div className="relative z-10 flex h-full flex-col justify-between">
-            <div>
-              <div className="text-xs font-semibold uppercase tracking-[0.16em] text-white/80">Service area</div>
-              <h3 className="font-display mt-2 text-3xl font-bold">{site.lead.cityArea}</h3>
-              <p className="mt-3 max-w-md text-sm text-white/90">
-                {site.lead.urduSupport
-                  ? "Urdu & English support available on WhatsApp."
-                  : "Fast replies on WhatsApp during working hours."}
-              </p>
-            </div>
-            <div className="mt-8 rounded-2xl bg-white/15 p-4 backdrop-blur">
-              <div className="text-sm font-semibold">Hours</div>
-              <div className="mt-1 text-sm text-white/90">{site.display.hours}</div>
-              {site.lead.ownerName ? (
-                <div className="mt-3 text-sm text-white/90">Owner: {site.lead.ownerName}</div>
-              ) : null}
-            </div>
-          </div>
-        </div>
+        <MapEmbed site={site} className="min-h-[320px]" />
       </div>
     </section>
   );

@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { Select } from "antd";
-import { useRouter } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import { listNiches } from "@/config/niches";
 import type { NicheId } from "@/config/types";
 
@@ -10,7 +10,9 @@ const niches = listNiches();
 
 export function NichePreviewBar({ current }: { current: NicheId }) {
   const router = useRouter();
+  const pathname = usePathname();
   const quick = niches.slice(0, 12);
+  const go = (id: NicheId) => router.push(`${pathname}?niche=${id}`);
 
   return (
     <div className="border-b border-black/10 bg-[#111827] text-white">
@@ -27,7 +29,7 @@ export function NichePreviewBar({ current }: { current: NicheId }) {
               value={current}
               optionFilterProp="label"
               options={niches.map((n) => ({ value: n.id, label: `${n.label} (${n.family})` }))}
-              onChange={(value: NicheId) => router.push(`/?niche=${value}`)}
+              onChange={(value: NicheId) => go(value)}
               popupMatchSelectWidth={false}
             />
             <Link
@@ -45,7 +47,7 @@ export function NichePreviewBar({ current }: { current: NicheId }) {
             return (
               <Link
                 key={n.id}
-                href={`/?niche=${n.id}`}
+                href={`${pathname}?niche=${n.id}`}
                 className={`shrink-0 whitespace-nowrap rounded-full px-3 py-1.5 text-xs font-semibold ${
                   active ? "niche-chip-active" : "niche-chip"
                 }`}

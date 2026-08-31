@@ -32,9 +32,14 @@ Preferred date: ${when}
 Notes: ${notes || "-"}
 Lead: ${site.lead.leadId}`;
 
+    if (!site.display.hasWhatsApp) {
+      toast.success("Request captured for this demo. Add a WhatsApp number in lead data to send live.");
+      return;
+    }
+
     toast.success("Opening WhatsApp with your booking details…");
     window.open(
-      `https://wa.me/${normalizeWa(site.lead.whatsapp || site.lead.phone)}?text=${encodeURIComponent(message)}`,
+      `https://wa.me/${normalizeWa(site.lead.whatsapp || site.lead.phone || "")}?text=${encodeURIComponent(message)}`,
       "_blank"
     );
   };
@@ -50,7 +55,7 @@ Lead: ${site.lead.leadId}`;
             {site.niche.bookingLabel}
           </Title>
           <Text className="mt-3 !text-[var(--muted)]">
-            This is a working demo flow. Submitting opens WhatsApp with a prefilled message for{" "}
+            Fill this form and we open WhatsApp with a ready message for{" "}
             <strong>{site.lead.businessName}</strong>.
           </Text>
 
@@ -120,11 +125,19 @@ Lead: ${site.lead.leadId}`;
               className="!h-12 !rounded-full !bg-[var(--primary)] !px-6 !font-semibold hover:!bg-[var(--primary-dark)]"
               onClick={submit}
             >
-              <FaWhatsapp className="mr-2" /> Send on WhatsApp
+              {site.display.hasWhatsApp ? (
+                <>
+                  <FaWhatsapp className="mr-2" /> Send on WhatsApp
+                </>
+              ) : (
+                "Request booking"
+              )}
             </Button>
-            <a href={`tel:${site.lead.phone || site.lead.whatsapp}`} className="btn-secondary">
-              Call {site.display.phoneDisplay}
-            </a>
+            {site.display.hasPhone ? (
+              <a href={`tel:${site.lead.phone || site.lead.whatsapp}`} className="btn-secondary">
+                Call {site.display.phoneDisplay}
+              </a>
+            ) : null}
           </div>
         </div>
       </div>

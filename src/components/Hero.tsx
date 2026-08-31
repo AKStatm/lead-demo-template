@@ -1,6 +1,5 @@
 "use client";
 
-import Image from "next/image";
 import { FaStar, FaWhatsapp } from "react-icons/fa";
 import {
   FiClock,
@@ -16,6 +15,19 @@ import {
 import type { SiteModel } from "@/config/site";
 import type { NicheFamily } from "@/config/types";
 import { SafeImage } from "./SafeImage";
+import { imageAt } from "@/config/images";
+import {
+  BarberHero,
+  SpaHero,
+  GymHero,
+  CafeHero,
+  HotelHero,
+  CraftHero,
+  PropertyHero,
+  EventsHero,
+  KitchenHero,
+  TechHero,
+} from "./heroes-extra";
 
 const familyIcon: Record<NicheFamily, typeof FiTool> = {
   "home-services": FiTool,
@@ -29,24 +41,61 @@ const familyIcon: Record<NicheFamily, typeof FiTool> = {
 };
 
 export function Hero({ site }: { site: SiteModel }) {
-  const family = site.niche.family;
-  if (family === "beauty") return <BeautyHero site={site} />;
-  if (family === "food") return <FoodHero site={site} />;
-  if (family === "health") return <HealthHero site={site} />;
-  if (family === "auto") return <AutoHero site={site} />;
-  if (family === "education") return <EducationHero site={site} />;
-  if (family === "professional") return <ProHero site={site} />;
-  if (family === "retail") return <RetailHero site={site} />;
-  return <HomeServicesHero site={site} />;
+  switch (site.layout.id) {
+    case "barber":
+      return <BarberHero site={site} />;
+    case "spa":
+      return <SpaHero site={site} />;
+    case "gym":
+      return <GymHero site={site} />;
+    case "cafe":
+      return <CafeHero site={site} />;
+    case "hotel":
+      return <HotelHero site={site} />;
+    case "craft":
+      return <CraftHero site={site} />;
+    case "property":
+      return <PropertyHero site={site} />;
+    case "events":
+      return <EventsHero site={site} />;
+    case "kitchen":
+      return <KitchenHero site={site} />;
+    case "tech":
+      return <TechHero site={site} />;
+    case "beauty":
+    case "bridal":
+      return <BeautyHero site={site} />;
+    case "restaurant":
+      return <FoodHero site={site} />;
+    case "clinic":
+      return <HealthHero site={site} />;
+    case "workshop":
+    case "transport":
+      return <AutoHero site={site} />;
+    case "campus":
+    case "arts":
+      return <EducationHero site={site} />;
+    case "firm":
+      return <ProHero site={site} />;
+    case "shop":
+      return <RetailHero site={site} />;
+    case "clean":
+      return <HomeServicesHero site={site} />;
+    default:
+      return <HomeServicesHero site={site} />;
+  }
 }
 
 function MetaRow({ site }: { site: SiteModel }) {
   return (
     <div className="mt-7 flex flex-wrap gap-x-5 gap-y-2 text-sm text-white/90">
-      <span className="inline-flex items-center gap-2">
-        <FaStar className="text-amber-300" />
-        {site.display.rating.toFixed(1)} · {site.display.reviewCount}+ reviews
-      </span>
+      {site.display.hasRating ? (
+        <span className="inline-flex items-center gap-2">
+          <FaStar className="text-amber-300" />
+          {site.display.rating.toFixed(1)}
+          {site.display.hasReviews ? ` · ${site.display.reviewCount}+ reviews` : ""}
+        </span>
+      ) : null}
       <span className="inline-flex items-center gap-2">
         <FiMapPin /> {site.lead.cityArea}
       </span>
@@ -63,9 +112,15 @@ function DarkCtas({ site }: { site: SiteModel }) {
       <a href="#book" className="btn-on-dark shadow-lg">
         {site.niche.ctaPrimary}
       </a>
-      <a href={site.display.whatsappLink} className="btn-on-dark-ghost">
-        <FaWhatsapp className="text-lg" /> {site.niche.ctaSecondary}
-      </a>
+      {site.display.hasWhatsApp ? (
+        <a href={site.display.whatsappLink} className="btn-on-dark-ghost">
+          <FaWhatsapp className="text-lg" /> {site.niche.ctaSecondary}
+        </a>
+      ) : (
+        <a href="#contact" className="btn-on-dark-ghost">
+          {site.niche.ctaSecondary}
+        </a>
+      )}
     </div>
   );
 }
@@ -75,7 +130,7 @@ function BookingCard({ site }: { site: SiteModel }) {
     <div className="relative overflow-hidden rounded-[24px] border border-black/5 bg-white text-slate-900 shadow-2xl">
       <div className="relative h-40 w-full bg-slate-100 sm:h-44">
         <SafeImage
-          src={site.images[1] || site.images[0]}
+          src={imageAt(site.images, 1)}
           alt={`${site.niche.label} preview`}
           fill
           className="object-cover"
@@ -192,7 +247,7 @@ function BeautyHero({ site }: { site: SiteModel }) {
               key={i}
               className={`relative overflow-hidden rounded-[28px] ${i === 0 ? "col-span-2 h-48 sm:h-56" : "h-36"}`}
             >
-              <Image src={site.images[i % site.images.length]} alt="" fill className="object-cover" sizes="50vw" />
+              <SafeImage src={imageAt(site.images, i)} alt="" fill className="object-cover" sizes="50vw" />
             </div>
           ))}
         </div>
@@ -205,7 +260,7 @@ function BeautyHero({ site }: { site: SiteModel }) {
 function FoodHero({ site }: { site: SiteModel }) {
   return (
     <section id="top" className="relative min-h-[78vh] overflow-hidden text-white">
-      <Image src={site.images[0]} alt="" fill className="object-cover" sizes="100vw" priority />
+      <SafeImage src={imageAt(site.images, 0)} alt="" fill className="object-cover" sizes="100vw" priority />
       <div className="absolute inset-0 bg-gradient-to-r from-black/80 via-black/55 to-black/25" />
       <div className="container-pad relative flex min-h-[78vh] flex-col justify-end py-14 lg:max-w-3xl lg:justify-center">
         <div className="mb-3 inline-flex w-fit rounded-full bg-orange-500 px-3 py-1 text-xs font-extrabold uppercase tracking-wide text-white">
@@ -265,7 +320,7 @@ function HealthHero({ site }: { site: SiteModel }) {
           </div>
         </div>
         <div className="relative h-[320px] overflow-hidden rounded-[32px] sm:h-[420px]">
-          <Image src={site.images[0]} alt="" fill className="object-cover" sizes="50vw" />
+          <SafeImage src={imageAt(site.images, 0)} alt="" fill className="object-cover" sizes="50vw" />
         </div>
       </div>
     </section>
@@ -292,7 +347,7 @@ function AutoHero({ site }: { site: SiteModel }) {
           {site.niche.services.slice(0, 4).map((s, i) => (
             <div key={s.title} className="overflow-hidden rounded-2xl border border-white/15 bg-white/10 backdrop-blur">
               <div className="relative h-28">
-                <Image src={site.images[i % site.images.length]} alt="" fill className="object-cover" sizes="25vw" />
+                <SafeImage src={imageAt(site.images, i)} alt="" fill className="object-cover" sizes="25vw" />
               </div>
               <div className="p-3">
                 <div className="text-sm font-bold">{s.title}</div>
@@ -336,7 +391,7 @@ function EducationHero({ site }: { site: SiteModel }) {
           {site.niche.packages.slice(0, 4).map((pkg, i) => (
             <div key={pkg.name} className="rounded-3xl border border-violet-100 bg-white p-4 shadow-sm">
               <div className="relative mb-3 h-24 overflow-hidden rounded-2xl">
-                <Image src={site.images[i % site.images.length]} alt="" fill className="object-cover" sizes="40vw" />
+                <SafeImage src={imageAt(site.images, i)} alt="" fill className="object-cover" sizes="40vw" />
               </div>
               <div className="font-bold">{pkg.name}</div>
               <div className="text-sm font-semibold" style={{ color: "var(--primary)" }}>
@@ -434,7 +489,7 @@ function RetailHero({ site }: { site: SiteModel }) {
           {site.niche.services.slice(0, 4).map((s, i) => (
             <div key={s.title} className="overflow-hidden rounded-[22px] border border-slate-100 bg-slate-50">
               <div className="relative h-40 sm:h-48">
-                <Image src={site.images[i % site.images.length]} alt={s.title} fill className="object-cover" sizes="25vw" />
+                <SafeImage src={imageAt(site.images, i)} alt={s.title} fill className="object-cover" sizes="25vw" />
               </div>
               <div className="p-3">
                 <div className="text-sm font-bold">{s.title}</div>

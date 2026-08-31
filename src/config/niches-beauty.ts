@@ -18,9 +18,13 @@ export const NICHES_BEAUTY: Record<string, NicheDefinition> = {
     servicesTitle: "Salon services",
     services: [
       { title: "Haircut & styling", description: "Ladies cuts, blow-dry, party styles.", priceFrom: "Rs 1,500", popular: true },
+      { title: "Hair color & highlights", description: "Global, highlights, balayage with patch test.", priceFrom: "Rs 4,500" },
       { title: "Facial & cleanup", description: "Cleanup, whitening and glow facials.", priceFrom: "Rs 2,500" },
       { title: "Party / bridal makeup", description: "HD makeup, hair and draping packages.", priceFrom: "Rs 8,000" },
-      { title: "Manicure & pedicure", description: "Classic and gel options.", priceFrom: "Rs 1,800" },
+      { title: "Manicure & pedicure", description: "Classic, gel and spa pedicure.", priceFrom: "Rs 1,800" },
+      { title: "Threading & waxing", description: "Face, arms, legs — hygienic wax.", priceFrom: "Rs 400" },
+      { title: "Keratin / treatment", description: "Smoothing and repair treatments.", priceFrom: "Rs 8,000" },
+      { title: "Mehndi / party ready", description: "Hands, feet and party add-ons.", priceFrom: "Rs 1,200" },
     ],
     features: [
       { title: "Hygienic tools", description: "Sanitized kit for every client." },
@@ -32,7 +36,7 @@ export const NICHES_BEAUTY: Record<string, NicheDefinition> = {
       { q: "Do you do home service?", a: "Bridal and party home service available in selected areas." },
       { q: "How to book?", a: "Tap Book and send preferred date/time on WhatsApp." },
     ],
-    galleryLabels: ["Hair", "Makeup", "Facial", "Bridal"],
+    galleryLabels: ["Salon floor", "Hair styling", "Makeup bar", "Facial", "Bridal look", "Nails", "Color work", "Lounge"],
     trustPoints: ["Hygienic", "Bridal ready", "WhatsApp booking", "Experienced artists"],
     packages: [
       { name: "Glow", price: "Rs 4,500", items: ["Cleanup", "Hair", "Brows"] },

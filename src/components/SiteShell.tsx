@@ -1,5 +1,4 @@
-import type { CSSProperties, ReactNode } from "react";
-import { Header } from "./Header";
+import type { ReactNode } from "react";
 import { Hero } from "./Hero";
 import { TrustBar } from "./TrustBar";
 import { EmergencyBand } from "./EmergencyBand";
@@ -20,55 +19,21 @@ import { Reviews } from "./Reviews";
 import { BookingForm } from "./BookingForm";
 import { FAQ } from "./FAQ";
 import { Contact } from "./Contact";
-import { Footer } from "./Footer";
-import { FloatingWhatsApp } from "./FloatingWhatsApp";
+import { AboutPreview } from "./AboutPreview";
 import type { SiteModel } from "@/config/site";
-import type { NicheFamily } from "@/config/types";
+import type { LayoutId } from "@/config/layouts";
 
 export function SiteShell({ site }: { site: SiteModel }) {
-  const cssVars = {
-    "--primary": site.theme.primary,
-    "--primary-dark": site.theme.primaryDark,
-    "--secondary": site.theme.secondary,
-    "--accent": site.theme.accent,
-    "--soft": site.theme.soft,
-    "--surface": site.theme.surface,
-    "--ink": site.theme.ink,
-    "--muted": site.theme.muted,
-    "--gradient": site.theme.gradient,
-  } as CSSProperties;
-
-  return (
-    <div style={cssVars}>
-      <Header site={site} />
-      <main>
-        <Hero site={site} />
-        {renderFamilySections(site)}
-      </main>
-      <Footer site={site} />
-      <FloatingWhatsApp site={site} />
-    </div>
-  );
-}
-
-/** Niche-specific extras gated by specialSections flags */
-function NicheSpecials({ site }: { site: SiteModel }) {
   return (
     <>
-      <BeforeAfter site={site} />
-      <Portfolio site={site} />
-      <Consultation site={site} />
-      <Delivery site={site} />
-      <Warranty site={site} />
+      <Hero site={site} />
+      {renderLayoutSections(site)}
     </>
   );
 }
 
-/** Different section order + emphasis per niche family */
-function renderFamilySections(site: SiteModel): ReactNode {
-  const family: NicheFamily = site.niche.family;
-
-  const commonEnd = (
+function End({ site }: { site: SiteModel }) {
+  return (
     <>
       <Reviews site={site} />
       <BookingForm site={site} />
@@ -76,56 +41,158 @@ function renderFamilySections(site: SiteModel): ReactNode {
       <Contact site={site} />
     </>
   );
+}
 
-  if (family === "food") {
-    return (
+function renderLayoutSections(site: SiteModel): ReactNode {
+  const layout: LayoutId = site.layout.id;
+
+  const recipes: Record<LayoutId, ReactNode> = {
+    emergency: (
+      <>
+        <TrustBar site={site} />
+        <EmergencyBand site={site} />
+        <Services site={site} />
+        <Warranty site={site} />
+        <Features site={site} />
+        <Gallery site={site} />
+        <Packages site={site} />
+        <End site={site} />
+      </>
+    ),
+    craft: (
+      <>
+        <Portfolio site={site} />
+        <Services site={site} />
+        <BeforeAfter site={site} />
+        <Gallery site={site} />
+        <Features site={site} />
+        <Packages site={site} />
+        <End site={site} />
+      </>
+    ),
+    clean: (
+      <>
+        <TrustBar site={site} />
+        <Services site={site} />
+        <Features site={site} />
+        <Warranty site={site} />
+        <Gallery site={site} />
+        <Packages site={site} />
+        <End site={site} />
+      </>
+    ),
+    tech: (
+      <>
+        <Services site={site} />
+        <Features site={site} />
+        <Warranty site={site} />
+        <Gallery site={site} />
+        <Packages site={site} />
+        <Consultation site={site} />
+        <End site={site} />
+      </>
+    ),
+    beauty: (
+      <>
+        <Services site={site} />
+        <BeforeAfter site={site} />
+        <Gallery site={site} />
+        <Packages site={site} />
+        <Features site={site} />
+        <Consultation site={site} />
+        <End site={site} />
+      </>
+    ),
+    barber: (
+      <>
+        <Services site={site} />
+        <Gallery site={site} />
+        <Packages site={site} />
+        <TrustBar site={site} />
+        <End site={site} />
+      </>
+    ),
+    spa: (
+      <>
+        <Services site={site} />
+        <Gallery site={site} />
+        <Packages site={site} />
+        <Features site={site} />
+        <Consultation site={site} />
+        <End site={site} />
+      </>
+    ),
+    bridal: (
+      <>
+        <Portfolio site={site} />
+        <Services site={site} />
+        <Packages site={site} />
+        <Gallery site={site} />
+        <Consultation site={site} />
+        <End site={site} />
+      </>
+    ),
+    clinic: (
+      <>
+        <TrustBar site={site} />
+        <Services site={site} />
+        <Consultation site={site} />
+        <Features site={site} />
+        <Packages site={site} />
+        <Gallery site={site} />
+        <End site={site} />
+      </>
+    ),
+    gym: (
+      <>
+        <Services site={site} />
+        <ClassesBand site={site} />
+        <Packages site={site} />
+        <Gallery site={site} />
+        <Features site={site} />
+        <End site={site} />
+      </>
+    ),
+    restaurant: (
+      <>
+        <MenuHighlights site={site} />
+        <Gallery site={site} />
+        <Packages site={site} />
+        <Delivery site={site} />
+        <AboutPreview site={site} />
+        <Features site={site} />
+        <TrustBar site={site} />
+        <End site={site} />
+      </>
+    ),
+    cafe: (
+      <>
+        <MenuHighlights site={site} />
+        <Gallery site={site} />
+        <Packages site={site} />
+        <Features site={site} />
+        <End site={site} />
+      </>
+    ),
+    kitchen: (
       <>
         <MenuHighlights site={site} />
         <Delivery site={site} />
         <Packages site={site} />
-        <Gallery site={site} />
-        <Consultation site={site} />
         <Features site={site} />
-        <TrustBar site={site} />
-        {commonEnd}
+        <End site={site} />
       </>
-    );
-  }
-
-  if (family === "beauty") {
-    return (
+    ),
+    hotel: (
       <>
-        <Services site={site} />
-        <BeforeAfter site={site} />
-        <Portfolio site={site} />
         <Gallery site={site} />
         <Packages site={site} />
-        <Consultation site={site} />
         <Features site={site} />
-        <TrustBar site={site} />
-        {commonEnd}
-      </>
-    );
-  }
-
-  if (family === "health") {
-    return (
-      <>
-        <TrustBar site={site} />
-        <Services site={site} />
         <Consultation site={site} />
-        <ClassesBand site={site} />
-        <Delivery site={site} />
-        <Features site={site} />
-        <Packages site={site} />
-        <Gallery site={site} />
-        {commonEnd}
+        <End site={site} />
       </>
-    );
-  }
-
-  if (family === "auto") {
-    return (
+    ),
+    workshop: (
       <>
         <EmergencyBand site={site} />
         <Services site={site} />
@@ -134,14 +201,20 @@ function renderFamilySections(site: SiteModel): ReactNode {
         <Packages site={site} />
         <Gallery site={site} />
         <Features site={site} />
-        <TrustBar site={site} />
-        {commonEnd}
+        <End site={site} />
       </>
-    );
-  }
-
-  if (family === "education") {
-    return (
+    ),
+    transport: (
+      <>
+        <Services site={site} />
+        <Features site={site} />
+        <Packages site={site} />
+        <Gallery site={site} />
+        <TrustBar site={site} />
+        <End site={site} />
+      </>
+    ),
+    campus: (
       <>
         <ClassesBand site={site} />
         <Packages site={site} />
@@ -149,28 +222,53 @@ function renderFamilySections(site: SiteModel): ReactNode {
         <Consultation site={site} />
         <Features site={site} />
         <Gallery site={site} />
-        {commonEnd}
+        <End site={site} />
       </>
-    );
-  }
-
-  if (family === "professional") {
-    return (
+    ),
+    arts: (
+      <>
+        <Portfolio site={site} />
+        <ClassesBand site={site} />
+        <Packages site={site} />
+        <Gallery site={site} />
+        <Services site={site} />
+        <End site={site} />
+      </>
+    ),
+    firm: (
       <>
         <TrustBar site={site} />
         <Consultation site={site} />
         <Features site={site} />
         <Services site={site} />
-        <Portfolio site={site} />
         <Packages site={site} />
         <Gallery site={site} />
-        {commonEnd}
+        <End site={site} />
       </>
-    );
-  }
-
-  if (family === "retail") {
-    return (
+    ),
+    property: (
+      <>
+        <Portfolio site={site} />
+        <Services site={site} />
+        <Consultation site={site} />
+        <Features site={site} />
+        <Packages site={site} />
+        <Gallery site={site} />
+        <End site={site} />
+      </>
+    ),
+    events: (
+      <>
+        <Portfolio site={site} />
+        <Services site={site} />
+        <Packages site={site} />
+        <Gallery site={site} />
+        <Consultation site={site} />
+        <Features site={site} />
+        <End site={site} />
+      </>
+    ),
+    shop: (
       <>
         <Services site={site} />
         <Portfolio site={site} />
@@ -178,31 +276,11 @@ function renderFamilySections(site: SiteModel): ReactNode {
         <Packages site={site} />
         <Warranty site={site} />
         <Gallery site={site} />
-        <Consultation site={site} />
         <Features site={site} />
-        <TrustBar site={site} />
-        {commonEnd}
+        <End site={site} />
       </>
-    );
-  }
+    ),
+  };
 
-  // home-services default
-  return (
-    <>
-      <TrustBar site={site} />
-      <EmergencyBand site={site} />
-      <Services site={site} />
-      <BeforeAfter site={site} />
-      <Warranty site={site} />
-      <Features site={site} />
-      <Portfolio site={site} />
-      <Consultation site={site} />
-      <Gallery site={site} />
-      <Packages site={site} />
-      {commonEnd}
-    </>
-  );
+  return recipes[layout] || recipes.emergency;
 }
-
-// keep export available for niche previews if needed
-export { NicheSpecials };

@@ -30,12 +30,14 @@ export function EmergencyBand({ site }: { site: SiteModel }) {
             </div>
           </div>
           <div className="flex w-full flex-col gap-3 sm:w-auto sm:flex-row sm:flex-wrap">
+            {site.display.hasPhone ? (
             <a
               href={`tel:${site.lead.phone || site.lead.whatsapp}`}
               className="inline-flex min-h-12 items-center justify-center gap-2 rounded-full bg-white px-4 py-3 text-sm font-bold text-[#7f1d1d]"
             >
               <FiPhoneCall /> Call now
             </a>
+            ) : null}
             <a
               href={site.display.whatsappLink}
               className="inline-flex min-h-12 items-center justify-center gap-2 rounded-full bg-black/25 px-4 py-3 text-sm font-bold text-white ring-1 ring-white/30"

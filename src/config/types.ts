@@ -156,8 +156,9 @@ export interface LeadData {
   businessName: string;
   nicheId: NicheId;
   category: string;
-  phone: string;
-  whatsapp: string;
+  /** Optional on scraped leads — hide call CTAs when empty */
+  phone?: string;
+  whatsapp?: string;
   email?: string;
   address: string;
   cityArea: string;
