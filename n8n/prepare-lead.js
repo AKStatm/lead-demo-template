@@ -78,15 +78,19 @@ if (!nicheId) {
   }
 }
 
-// Short public URLs: https://demo-pl-001.vercel.app
-// (do NOT append long business-name slug)
+// Short public URLs: https://myfixers-pl-001.vercel.app
+const firstWord = (businessName.trim().split(/\s+/)[0] || 'lead')
+  .toLowerCase()
+  .replace(/[^a-z0-9]+/g, '-')
+  .replace(/^-|-$/g, '') || 'lead';
 const shortId = leadId
   .toLowerCase()
   .replace(/[^a-z0-9]+/g, '-')
   .replace(/^-|-$/g, '');
 
-const repoName = ('demo-' + shortId)
+const repoName = (firstWord + '-' + shortId)
   .replace(/--+/g, '-')
+  .replace(/^-|-$/g, '')
   .slice(0, 40);
 
 const leadJson = {
