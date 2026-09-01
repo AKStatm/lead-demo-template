@@ -79,10 +79,17 @@ if (!nicheId) {
 }
 
 // Short public URLs: https://myfixers-pl-001.vercel.app
-const firstWord = (businessName.trim().split(/\s+/)[0] || 'lead')
-  .toLowerCase()
-  .replace(/[^a-z0-9]+/g, '-')
-  .replace(/^-|-$/g, '') || 'lead';
+const firstWord = (() => {
+  const parts = businessName.trim().split(/\s+/).filter(Boolean);
+  for (const part of parts) {
+    const slug = part.toLowerCase().replace(/[^a-z0-9]+/g, '');
+    if (slug.length >= 2 && !['a', 'an', 'the', 'al', 'el', 'mr', 'ms', 'dr', 'm', 's'].includes(slug)) {
+      return slug.slice(0, 20);
+    }
+  }
+  const all = businessName.toLowerCase().replace(/[^a-z0-9]+/g, '');
+  return all.length >= 2 ? all.slice(0, 20) : 'lead';
+})();
 const shortId = leadId
   .toLowerCase()
   .replace(/[^a-z0-9]+/g, '-')
